@@ -2,43 +2,52 @@
 pragma solidity ^0.8.9;
 
 contract CrowdFunding {
-     struct Campaign {
+    struct Campaign {
         address owner;
         string title;
         string description;
         uint256 target;
         uint256 deadline;
-         uint256 amountCollected;
-         string image;
-         address[] donators;
-         uint256[] donations;
-     }
+        string image;
+        address[] donators;
+        uint256[] donations;
+        uint256 amountCollected;
+    }
 
-     mapping(uint256 => Campaign) campaigns;
+    mapping(uint256 => Campaign) campaigns;
 
-     uint256 public numberOfCampaigns = 0;
+    uint256 public numberOfCampaigns = 0;
 
-       function createCampaign(
-          string memory title,
-          string memory description,
-          uint256 target,
-          uint256 deadline,
-          string memory image
-       ) public {
-          Campaign storage campaign = campaigns[numberOfCampaigns];
-          campaign.owner = msg.sender;
-          campaign.title = title;
-          campaign.description = description;
-          campaign.target = target;
-          campaign.deadline = deadline;
-          campaign.image = image;
-          numberOfCampaigns++;
-       }
+    function createCampaign(
+        address _owner,
+        string memory _title,
+        string memory _description,
+        uint256 _target,
+        uint256 _deadline,
+        string memory _image
+    ) public returns (uint256) {
+         Campaign storage campaign = campaigns[numberOfCampaigns];
 
-       function donateToCampaign() {}
+       require(campaign.deadline < block.timestamp, "The deadline should be a date in the future.");
 
-      function getDonators() {}
+        campaign.owner = _owner;
+        campaign.title = _title;
+        campaign.description = _description;
+        campaign.target = _target;
+        campaign.deadline = _deadline;
+        campaign.image = _image;
+        campaign.amountCollected = 0;
 
-      function getCampaigns() {}
+        numberOfCampaigns++;
 
-}  
+        return numberOfCampaigns - 1;
+    }
+
+    function donateToCampaign() {
+      
+    }
+
+    function getDonators() {}
+
+    function getCampaigns() {}
+}
